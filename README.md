@@ -2,179 +2,163 @@
   <img src="docs/banner.svg" alt="CineMatch AI banner" width="100%">
 </p>
 
-# 🎬 CineMatch AI
-
-A full-stack movie recommendation system that suggests similar movies based on a title you choose, powered by a content-based ML model and live TMDB data.
-
-![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
-![TMDB](https://img.shields.io/badge/TMDB-API-01B4E4?logo=themoviedatabase&logoColor=white)
-
----
-
-## Overview
-
-CineMatch AI combines:
-
-- A content-based recommendation engine built in Python with scikit-learn
-- A FastAPI backend that exposes movie search and recommendation endpoints
-- A React + Vite frontend for browsing and exploring movies
-- Live metadata enrichment from The Movie Database (TMDB)
-
-The app lets users search movies, explore popular and top-rated titles, view details, and get recommendations based on similarity to a selected movie.
-
----
-
-## ✨ Features
-
-- 🎯 Personalized movie recommendations from a selected title
-- 🔍 Movie search across the dataset
-- 🔥 Popular and top-rated movie lists
-- 🎭 Genre-based discovery
-- 🎬 Movie details including poster, overview, release date, and rating
-- ❤️ Watchlist support for saved titles
-- ⚡ FastAPI backend with automatic API docs
-- 🌐 Real-time enrichment from TMDB
-
----
-
-## 🧠 How it works
-
-CineMatch AI uses a content-based filtering approach:
-
-1. Load the cleaned movie dataset
-2. Extract relevant features such as title, overview, genres, cast, and metadata
-3. Convert those features into a vector representation
-4. Compute similarity between movies using a distance-based similarity metric
-5. Rank movies by similarity to the selected movie
-6. Return the top matches through the API
-
-The model is trained offline and then loaded at backend startup to serve recommendations quickly.
+<h1 align="center">🎬 CineMatch AI</h1>
 
 <p align="center">
-  <img src="docs/architecture.svg" alt="CineMatch AI architecture diagram" width="90%">
+  Discover movies that feel like your next favorite.
+  <br>
+  A movie discovery app combining a content-based recommendation model, a FastAPI service, a React interface, and TMDB metadata.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black" alt="React">
+  <img src="https://img.shields.io/badge/Vite-frontend-646CFF?logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn&logoColor=white" alt="scikit-learn">
+  <img src="https://img.shields.io/badge/TMDB-metadata-01B4E4?logo=themoviedatabase&logoColor=white" alt="TMDB">
+</p>
+
+<p align="center">
+  <a href="#-getting-started">Get started</a> ·
+  <a href="#-how-the-app-works">How it works</a> ·
+  <a href="#-api-reference">API reference</a> ·
+  <a href="#-contributing">Contributing</a>
 </p>
 
 ---
 
-## 📸 Screenshots
+## Contents
 
-> Replace the placeholder images below with real app screenshots when available.
-
-| Home | Recommendations | Movie Details |
-|---|---|---|
-| ![Home](docs/home.png) | ![Recommendations](docs/recommendations.png) | ![Details](docs/details.png) |
+- [What is CineMatch AI?](#-what-is-cinematch-ai)
+- [Features](#-features)
+- [How the app works](#-how-the-app-works)
+- [Recommendation flow](#recommendation-request-flow)
+- [Technology](#️-technology)
+- [Getting started](#-getting-started)
+- [API reference](#-api-reference)
+- [Project layout](#-project-layout)
+- [Troubleshooting](#-troubleshooting)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License and credits](#-license-and-credits)
 
 ---
 
-## 🛠️ Tech Stack
+## 🍿 What is CineMatch AI?
 
-| Layer | Technologies |
+CineMatch AI helps you explore movies through recommendations based on a movie you already enjoy. Its Python recommendation service loads a precomputed movie dataset and similarity matrix. The React app calls the FastAPI backend, while the backend can enrich returned movie records with posters and other metadata from TMDB.
+
+The repository also includes a Jupyter notebook for the machine-learning work and a separate Streamlit `app.py` entry point. The current web application is split into `frontend/` and `backend/`.
+
+## ✨ Features
+
+- **Similar-movie recommendations** based on a selected title
+- **Movie search** across the model's movie dataset
+- **Popular and top-rated** movie collections
+- **Movie discovery pages** for browsing and viewing details
+- **TMDB enrichment** for posters, backdrops, ratings, and related metadata when available
+- **Watchlist interface** in the React application
+- **Interactive API documentation** generated by FastAPI
+- **Preloaded model** so the recommendation model is loaded once when the backend starts
+
+> Availability of a movie's TMDB enrichment depends on a valid token, network access, and TMDB returning a match. The recommendation service has fallback behavior when enrichment is unavailable.
+
+## 🧭 How the app works
+
+### System architecture
+
+![CineMatch AI system architecture and request flow](docs/workflow.svg)
+
+### Recommendation request flow
+
+1. The user searches for or selects a movie in the React interface.
+2. The frontend sends an HTTP request to the FastAPI application.
+3. FastAPI routes the request to the movie service.
+4. For recommendations, the service resolves the title against the loaded movie list and ranks candidates using the precomputed similarity matrix.
+5. The service enriches returned movie data through TMDB when needed and when credentials are available.
+6. FastAPI returns JSON to the frontend, which renders the movie results.
+
+### Model lifecycle
+
+- **Training/preparation:** The repository's Jupyter notebook contains the offline machine-learning workflow. The serialized model is stored at `models/movie_recommendation_model.pkl`.
+- **Application startup:** `backend/main.py` loads the model once and creates the recommendation service.
+- **Request time:** The service finds the selected movie and sorts its similarity scores to return recommendations.
+
+The recommendation code consumes a stored movie table and similarity matrix. The exact feature engineering and similarity metric should be taken from the notebook/model training code; this README does not assume a particular vectorizer or metric.
+
+## 🖥️ Technology
+
+| Area | Tools |
 |---|---|
-| Frontend | React, Vite, JavaScript, CSS |
-| Backend | Python, FastAPI, Uvicorn |
-| Machine Learning | Pandas, NumPy, scikit-learn, Joblib |
-| Recommendation Method | Content-based filtering |
-| External Data | TMDB API |
-| Model Storage | Pickle / Joblib model file |
-| Training | Jupyter Notebook |
+| Web UI | React 19, JavaScript, Vite, Axios |
+| API | Python, FastAPI, Uvicorn |
+| Recommendation service | Pandas, NumPy, scikit-learn, Joblib |
+| Movie metadata | TMDB API |
+| Model artifact | `models/movie_recommendation_model.pkl` |
+| ML exploration | Jupyter Notebook |
 
----
-
-## 📊 Dataset and Model
-
-| Item | Details |
-|---|---|
-| Dataset | TMDB movie metadata (movie features + metadata) |
-| Movie count | 4,803 |
-| Columns | 24 |
-| Model file | `models/movie_recommendation_model.pkl` |
-| Storage | Git LFS |
-
-> ⚠️ Security note: pickle/joblib model files can execute code when loaded. Only load models that you trained yourself or trust completely.
-
----
-
-## ⚙️ Getting Started
+## 🚀 Getting started
 
 ### Prerequisites
 
-- Python 3.10+
-- Node.js 18+
-- Git LFS
-- A valid TMDB API bearer token
+- Python 3.10 or newer
+- Node.js and npm (use a version compatible with the Vite version in `frontend/package.json`)
+- Git and [Git LFS](https://git-lfs.com/)
+- A TMDB API Read Access Token for live TMDB enrichment
 
-### 1. Clone the repository
+### 1. Clone the project and fetch the model
 
-Install Git LFS before cloning so the model file is downloaded correctly.
+Install Git LFS before cloning so Git can retrieve the model artifact:
 
 ```bash
 git lfs install
 git clone https://github.com/im-vishal-jain/CineMatch-AI-movie-recomendation.git
 cd CineMatch-AI-movie-recomendation
+git lfs pull
 ```
 
-### 2. Set up the backend
+### 2. Configure the TMDB token
 
-Create and activate a virtual environment:
+Create a `.env` file in the repository root:
+
+```env
+TMDB_BEARER_TOKEN=your_tmdb_api_read_access_token
+```
+
+The backend reads this variable from the root `.env`. Never commit your real token. Without it, live TMDB requests cannot authenticate.
+
+### 3. Install and start the backend
+
+Create a virtual environment and install backend dependencies. The TMDB client also imports `requests` and `python-dotenv`; install these explicitly because they are not currently listed in `backend/requirements.txt`:
 
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
-
-```bash
-# Windows
-venv\Scripts\activate
-
-# macOS / Linux
-source venv/bin/activate
-```
-
-Install the backend dependencies:
-
-```bash
-pip install -r backend/requirements.txt
-```
-
-### 3. Configure environment variables
-
-Create a `.env` file in the project root and add your TMDB token:
 
 ```bash
 # macOS / Linux
-cat > .env <<EOF
-TMDB_BEARER_TOKEN=your_tmdb_bearer_token_here
-EOF
+source .venv/bin/activate
+
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
 ```
-
-```powershell
-# Windows (PowerShell)
-@"
-TMDB_BEARER_TOKEN=your_tmdb_bearer_token_here
-"@ | Set-Content .env
-```
-
-> Do not commit your real `.env` file. It is already included in `.gitignore`.
-
-### 4. Run the backend
-
-From the project root:
 
 ```bash
+python -m pip install -r backend/requirements.txt requests python-dotenv
 python -m uvicorn backend.main:app --reload --port 8000
 ```
 
-Open the API docs here:
+The commands must be run from the repository root. Once the server starts, open:
 
-- API: http://127.0.0.1:8000
-- Swagger UI: http://127.0.0.1:8000/docs
-- Health check: http://127.0.0.1:8000/health
+- API root: <http://127.0.0.1:8000/>
+- Health check: <http://127.0.0.1:8000/health>
+- Swagger UI: <http://127.0.0.1:8000/docs>
+- ReDoc: <http://127.0.0.1:8000/redoc>
 
-### 5. Run the frontend
+### 4. Install and start the frontend
 
-In a new terminal:
+In a second terminal:
 
 ```bash
 cd frontend
@@ -182,127 +166,128 @@ npm install
 npm run dev
 ```
 
-The frontend expects the backend at `http://localhost:8000`.
+Open the local address printed by Vite (typically <http://localhost:5173>). The current frontend API client uses `http://127.0.0.1:8000/api` as its base URL.
 
----
+### Useful frontend scripts
 
-## 🔌 API Endpoints
+Run these from `frontend/`:
 
-The backend currently exposes these endpoints:
+```bash
+npm run dev      # start the local development server
+npm run build    # create a production build
+npm run preview  # preview the production build
+npm run lint     # run Oxlint
+```
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/movies/recommend?title={movie_title}&limit={n}` | Get top similar movies for a selected title |
-| GET | `/api/movies/popular?limit={n}` | Fetch popular movies |
-| GET | `/api/movies/top-rated?limit={n}` | Fetch top-rated movies |
-| GET | `/api/movies/search?q={query}&limit={n}` | Search by movie title |
+## 🔌 API reference
 
-Full, interactive docs are available via FastAPI at `/docs` when the server is running.
+The FastAPI router is mounted at `/api/movies`. These are the endpoints currently implemented in `backend/app/routes/movies.py`:
 
----
+| Method | Endpoint | Query parameters | Purpose |
+|---|---|---|---|
+| `GET` | `/api/movies/recommend` | Required: `title`; optional: `limit` (default 10, range 1–20) | Recommend similar movies. Returns 404 if the title cannot be resolved. |
+| `GET` | `/api/movies/popular` | Optional: `limit` (default 10) | Return movies sorted by popularity. |
+| `GET` | `/api/movies/top-rated` | Optional: `limit` (default 10) | Return movies with at least 100 votes, sorted by rating. |
+| `GET` | `/api/movies/search` | Required: `q`; optional: `limit` (default 10, range 1–30) | Search titles in the loaded movie dataset. |
 
-## 🏗️ Project Structure
+### Example requests
+
+```bash
+# Get recommendations for The Matrix
+curl --get 'http://127.0.0.1:8000/api/movies/recommend' \
+  --data-urlencode 'title=The Matrix' \
+  --data-urlencode 'limit=10'
+
+# Search titles (the backend query parameter is q)
+curl --get 'http://127.0.0.1:8000/api/movies/search' \
+  --data-urlencode 'q=matrix'
+
+# Popular movies
+curl 'http://127.0.0.1:8000/api/movies/popular?limit=10'
+
+# Top-rated movies
+curl 'http://127.0.0.1:8000/api/movies/top-rated?limit=10'
+```
+
+Responses are JSON. For the complete interactive schema, run the backend and visit `/docs`.
+
+> **Frontend integration note:** The current API client in `frontend/src/services/api.js` sends search as `query` and defines movie-details calls, while the backend routes currently accept search as `q` and do not implement a movie-details route. The endpoint table above describes the backend implementation. Aligning those frontend calls with the backend is a follow-up integration task.
+
+## 🗂️ Project layout
 
 ```text
-CineMatch-AI-movie-recomendation/
+.
 ├── backend/
 │   ├── app/
 │   │   ├── core/
-│   │   │   ├── model_loader.py
-│   │   │   └── tmdb_client.py
+│   │   │   ├── model_loader.py       # Loads the serialized model
+│   │   │   └── tmdb_client.py        # TMDB API and image URL helpers
 │   │   ├── routes/
-│   │   │   └── movies.py
+│   │   │   └── movies.py             # FastAPI movie endpoints
 │   │   └── services/
-│   │       └── recommendation.py
-│   ├── main.py
-│   └── requirements.txt
+│   │       └── recommendation.py    # Title matching, ranking, enrichment
+│   ├── main.py                       # FastAPI app and startup lifecycle
+│   └── requirements.txt              # Backend Python dependencies
 ├── frontend/
-│   ├── public/
 │   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
+│   │   ├── components/               # Shared UI components
+│   │   ├── pages/                    # Home, Discover, Genres, etc.
+│   │   ├── services/api.js           # HTTP client for the backend
+│   │   └── App.jsx                   # Application page routing/state
 │   ├── package.json
-│   ├── vite.config.js
-│   └── index.html
-├── docs/
-│   ├── architecture.svg
-│   ├── banner.svg
-│   ├── home.png
-│   ├── recommendations.png
-│   └── details.png
+│   └── vite.config.js
 ├── models/
 │   └── movie_recommendation_model.pkl
-├── app.py
-├── README.md
-├── requirements.txt
-├── LICENSE
-├── .gitignore
-├── .gitattributes
+├── docs/
+│   ├── banner.svg
+│   └── workflow.svg                 # Architecture and request flow
 ├── Movie_Recommendation_System_using_Machine_Learning_with_Python 2.ipynb
-└── .env
+├── app.py                            # Separate Streamlit application
+├── requirements.txt                  # Root/Streamlit dependencies
+└── README.md
 ```
-
----
 
 ## 🩺 Troubleshooting
 
-| Issue | Fix |
+| Problem | What to check |
 |---|---|
-| Model file is missing or the backend crashes at startup | Run `git lfs install` and `git lfs pull` to fetch the model file correctly |
-| TMDB requests fail with 401 | Confirm the `TMDB_BEARER_TOKEN` in `.env` is the actual bearer token and has no extra quotes or spaces |
-| Frontend shows no data | Make sure the backend is running on port 8000 and the frontend is calling the correct API URL |
-| `ModuleNotFoundError` | Activate the virtual environment and reinstall project dependencies |
-| `No module named backend` | Run commands from the project root and keep the package structure intact |
+| Backend says the model is missing or it is only a small pointer file | Run `git lfs install` and `git lfs pull`; confirm the model file was downloaded. |
+| `ModuleNotFoundError: requests` or `dotenv` | Activate the virtual environment and install `requests` and `python-dotenv` as shown above. |
+| TMDB returns 401 | Verify the root `.env` contains a valid TMDB API Read Access Token in `TMDB_BEARER_TOKEN`. Restart the backend after changing it. |
+| Frontend cannot connect to the API | Start FastAPI on port 8000 and check the URL in `frontend/src/services/api.js`. |
+| Movie search fails from the UI | The backend expects the search parameter `q`; see the frontend integration note and API docs. |
+| `No module named backend` | Run Uvicorn from the repository root with `python -m uvicorn backend.main:app`. |
+| Browser reports a CORS error | The backend currently allows the Vite origins `localhost:5173` and `localhost:5174`; use one of these or update the backend CORS configuration. |
 
----
+## 🛣️ Roadmap
 
-## 🚀 Roadmap
-
-- [ ] Improve recommendation quality with evaluation metrics
-- [ ] Explore embedding-based recommendations
-- [ ] Add hybrid recommendations using collaborative filtering
-- [ ] Add user authentication and profiles
-- [ ] Add advanced filtering and ranking options
-- [ ] Add natural-language movie search
-- [ ] Add Docker deployment support
-- [ ] Add automated tests and CI/CD checks
-
----
+- [ ] Align frontend API calls with the implemented backend routes
+- [ ] Add or remove unimplemented frontend API features (such as movie details) consistently
+- [ ] Document and evaluate the model's feature engineering and recommendation quality
+- [ ] Add automated tests for API routes and recommendation ranking
+- [ ] Add configuration for frontend/backend URLs
+- [ ] Add Docker support and deployment instructions
+- [ ] Explore hybrid or embedding-based recommendations
 
 ## 🤝 Contributing
 
-Contributions are welcome. If you want to improve the project, feel free to:
+Contributions, bug reports, and suggestions are welcome:
 
-- Open an issue
-- Submit a pull request
-- Share feedback on model quality or UX improvements
+1. Open an issue describing the proposed change or problem.
+2. Create a focused branch for your change.
+3. Test the relevant backend or frontend behavior.
+4. Open a pull request with a concise description and screenshots when the UI changes.
 
----
+## 📄 License and credits
 
-## 📄 License
+This project is licensed under the MIT License; see [`LICENSE`](LICENSE).
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
-## 🙏 Acknowledgements
-
-- [The Movie Database (TMDB)](https://www.themoviedb.org/) for movie metadata and images
-- The open-source Python and JavaScript ecosystems that power this project
-
----
+Movie metadata and images are provided through [The Movie Database (TMDB)](https://www.themoviedb.org/). This product uses the TMDB API but is not endorsed or certified by TMDB.
 
 ## 👨‍💻 Author
 
-**Vishal Kumar**
-
-- GitHub: [@im-vishal-jain](https://github.com/im-vishal-jain)
-- Repository: [CineMatch AI](https://github.com/im-vishal-jain/CineMatch-AI-movie-recomendation)
+**Vishal Kumar** · [GitHub @im-vishal-jain](https://github.com/im-vishal-jain)
 
 ---
 
-⭐ If you like this project, consider giving it a star on GitHub.
+<p align="center">If CineMatch AI helps you find your next movie, consider giving the repository a ⭐</p>

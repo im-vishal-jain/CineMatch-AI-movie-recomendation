@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="790" viewBox="0 0 1200 790" role="img" aria-labelledby="title desc">
+  <title id="title">CineMatch AI architecture and workflows</title>
+  <desc id="desc">The React frontend sends requests to FastAPI. The movie service ranks recommendations using the loaded movie data and similarity matrix, optionally enriches results with TMDB, and returns JSON. An offline notebook prepares the model artifact loaded during backend startup.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1020"/><stop offset="1" stop-color="#161a2e"/></linearGradient>
+    <linearGradient id="accent" x1="0" x2="1"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#a5b4fc"/></marker>
+    <style>
+      .title{font:700 29px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.subtitle{font:400 15px Inter,Segoe UI,Arial,sans-serif;fill:#aab4ca}.heading{font:700 17px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.body{font:400 13px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}.small{font:400 12px Inter,Segoe UI,Arial,sans-serif;fill:#aab4ca}.label{font:700 11px Inter,Segoe UI,Arial,sans-serif;fill:#ddd6fe;letter-spacing:1px}.box{fill:#1e2540;stroke:#414b70;stroke-width:1.5}.soft{fill:#171e35;stroke:#303b5d;stroke-width:1.2}.flow{fill:none;stroke:#a5b4fc;stroke-width:2.4;marker-end:url(#arrow)}.optional{fill:none;stroke:#f0abfc;stroke-width:2;stroke-dasharray:7 6;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1200" height="790" rx="24" fill="url(#bg)"/>
+  <text x="56" y="61" class="title">CineMatch AI · system architecture</text>
+  <text x="56" y="88" class="subtitle">From a movie title to ranked recommendations, with optional live TMDB enrichment</text>
+
+  <text x="56" y="135" class="label">ONLINE REQUEST FLOW</text>
+  <rect x="55" y="158" width="205" height="132" rx="16" class="box"/>
+  <text x="78" y="192" class="heading">1 · Movie fan</text>
+  <text x="78" y="220" class="body">Searches, selects a title,</text>
+  <text x="78" y="241" class="body">and explores results</text>
+  <text x="78" y="267" class="small">Browser</text>
+
+  <rect x="335" y="158" width="225" height="132" rx="16" class="box"/>
+  <text x="358" y="192" class="heading">2 · React + Vite</text>
+  <text x="358" y="220" class="body">Pages, components, and</text>
+  <text x="358" y="241" class="body">Axios API client</text>
+  <text x="358" y="267" class="small">frontend/src/services/api.js</text>
+
+  <rect x="635" y="158" width="225" height="132" rx="16" class="box"/>
+  <text x="658" y="192" class="heading">3 · FastAPI</text>
+  <text x="658" y="220" class="body">Validates and routes</text>
+  <text x="658" y="241" class="body">HTTP requests</text>
+  <text x="658" y="267" class="small">/api/movies/* · port 8000</text>
+
+  <rect x="935" y="158" width="215" height="132" rx="16" class="box"/>
+  <text x="958" y="192" class="heading">4 · Movie service</text>
+  <text x="958" y="220" class="body">Searches titles and ranks</text>
+  <text x="958" y="241" class="body">similarity candidates</text>
+  <text x="958" y="267" class="small">recommendation.py</text>
+
+  <path d="M260 224 H326" class="flow"/><text x="270" y="211" class="small">user action</text>
+  <path d="M560 224 H626" class="flow"/><text x="567" y="211" class="small">HTTP / JSON</text>
+  <path d="M860 224 H926" class="flow"/><text x="871" y="211" class="small">route</text>
+
+  <rect x="935" y="365" width="215" height="145" rx="16" class="soft"/>
+  <text x="958" y="400" class="heading">5 · Model in memory</text>
+  <text x="958" y="429" class="body">Movie data + precomputed</text>
+  <text x="958" y="450" class="body">similarity matrix</text>
+  <text x="958" y="480" class="small">models/movie_recommendation_model.pkl</text>
+  <path d="M1042 290 V356" class="flow"/><text x="1054" y="329" class="small">rank</text>
+
+  <rect x="635" y="365" width="225" height="145" rx="16" class="soft"/>
+  <text x="658" y="400" class="heading">6 · TMDB (optional)</text>
+  <text x="658" y="429" class="body">Adds posters, backdrops,</text>
+  <text x="658" y="450" class="body">ratings, and metadata</text>
+  <text x="658" y="480" class="small">Requires TMDB_BEARER_TOKEN</text>
+  <path d="M935 436 H869" class="optional"/><text x="876" y="423" class="small">enrich</text>
+
+  <rect x="335" y="365" width="225" height="145" rx="16" class="soft"/>
+  <text x="358" y="400" class="heading">7 · JSON response</text>
+  <text x="358" y="429" class="body">FastAPI returns matching</text>
+  <text x="358" y="450" class="body">movie records to the UI</text>
+  <text x="358" y="480" class="small">Fallback data if enrichment fails</text>
+  <path d="M635 456 H569" class="flow"/><text x="578" y="443" class="small">results</text>
+  <path d="M335 456 C290 456 290 322 447 322 V298" class="flow"/><text x="301" y="386" class="small" transform="rotate(-90 301 386)">render cards</text>
+
+  <line x1="55" y1="550" x2="1150" y2="550" stroke="#303b5d"/>
+  <text x="56" y="585" class="label">OFFLINE MODEL PREPARATION AND BACKEND STARTUP</text>
+
+  <rect x="75" y="615" width="270" height="112" rx="16" class="box"/>
+  <text x="99" y="650" class="heading">Notebook workflow</text>
+  <text x="99" y="679" class="body">Prepare movie data and build</text>
+  <text x="99" y="700" class="body">the serialized recommendation model</text>
+
+  <rect x="465" y="615" width="270" height="112" rx="16" class="box"/>
+  <text x="489" y="650" class="heading">Saved model artifact</text>
+  <text x="489" y="679" class="body">Git LFS-managed model file</text>
+  <text x="489" y="700" class="small">models/movie_recommendation_model.pkl</text>
+
+  <rect x="855" y="615" width="270" height="112" rx="16" class="box"/>
+  <text x="879" y="650" class="heading">FastAPI startup</text>
+  <text x="879" y="679" class="body">Load model once; create the</text>
+  <text x="879" y="700" class="body">movie recommendation service</text>
+
+  <path d="M345 670 H456" class="flow"/><text x="372" y="654" class="small">serialize</text>
+  <path d="M735 670 H846" class="flow"/><text x="764" y="654" class="small">load at startup</text>
+  <path d="M990 615 V535 C990 523 1042 523 1042 510" class="flow"/>
+  <text x="1004" y="564" class="small">in memory</text>
+</svg>
